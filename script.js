@@ -166,6 +166,16 @@ const products = [
     }
 ];
 
+// 检查登录状态
+function checkLogin() {
+    const loggedInPhone = localStorage.getItem("loggedInPhone");
+    if (loggedInPhone && allowedPhones.includes(loggedInPhone)) {
+        // 如果已登录，显示产品列表
+        document.getElementById("productContainer").style.display = "block";
+        initProducts();
+    }
+}
+
 // 显示登录弹窗
 function showLogin() {
     document.getElementById("loginModal").style.display = "block";
@@ -183,15 +193,25 @@ function doLogin() {
         if (allowedPhones.includes(phone)) {
             alert("登录成功！");
             hideLogin();
+            // 保存登录状态
+            localStorage.setItem("loggedInPhone", phone);
             // 显示产品列表
             document.getElementById("productContainer").style.display = "block";
-            initProducts(); // 初始化产品列表
+            initProducts();
         } else {
             alert("该手机号无权限登录！");
         }
     } else {
         alert("请输入正确的手机号！");
     }
+}
+
+// 退出登录
+function logout() {
+    localStorage.removeItem("loggedInPhone"); // 清除登录状态
+    alert("已退出登录！");
+    // 隐藏产品列表
+    document.getElementById("productContainer").style.display = "none";
 }
 
 // 初始化产品
@@ -217,6 +237,5 @@ function initProducts() {
 
 // 页面加载完成后执行
 window.onload = function() {
-    // 页面加载时不显示产品列表
-    document.getElementById("productContainer").style.display = "none";
+    checkLogin(); // 检查登录状态
 };
